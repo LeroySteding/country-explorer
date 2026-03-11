@@ -21,3 +21,12 @@ export async function getCountryByCode(code: string): Promise<CountryDetail> {
   const data = await res.json()
   return data[0] // API geeft altijd een array terug
 }
+
+export async function getBorderCountries(codes: string[]): Promise<{ cca3: string; name: { common: string } }[]> {
+  if (!codes.length) return []
+  const res = await fetch(`${BASE_URL}/alpha?codes=${codes.join(',')}&fields=cca3,name`, {
+    next: { revalidate: 3600 }
+  })
+  if (!res.ok) return []
+  return res.json()
+}

@@ -2,47 +2,46 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Country } from "@/lib/types";
 
-type Props = {
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardAction,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
+
+
+type CountryCardProps = {
   country: Country;
 };
 
-export default function CountryCard({ country }: Props) {
+export default function CountryCard({ country }: CountryCardProps) {
   const { cca3, name, flags, population, region, capital } = country;
 
   return (
-    // Link wraps the entire card — cca3 is the unique route param (e.g. /NLD)
     <Link href={`/${cca3}`}>
-      <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-        <Image
-          className="w-full h-48 object-cover"
-          src={flags.svg}
-          alt={flags.alt ?? `Flag of ${name.common}`}
-          width={320}
-          height={200}
-          // priority={false} by default — fine for a list of cards
-        />
-
-        <div className="p-4">
-          <h2 className="text-xl font-bold text-gray-900">{name.common}</h2>
-
-          <dl className="mt-2 space-y-1 text-sm">
-            <div>
-              <dt className="inline text-gray-500">Population:</dt>
-              <dd className="inline ml-1 font-medium">{population.toLocaleString()}</dd>
-            </div>
-            <div>
-              <dt className="inline text-gray-500">Region</dt>
-              <dd className="inline ml-1 font-medium">{region}</dd>
-            </div>
-
-            <div>
-               <dt className="inline text-gray-500">Capital</dt>
-              {/* capital is optional in the API — some territories have none */}
-              <dd className="inline ml-1 font-medium">{capital?.[0] ?? "—"}</dd>
-            </div>
-          </dl>
-        </div>
-      </article>
+      <Card className="relative mx-auto w-full max-w-sm pt-0">
+          <div className="absolute inset-0 z-30 aspect-video" />
+          <Image
+            src={flags.svg}
+            alt={flags.alt ?? `Flag of ${name.common}`}
+            width={320}
+            height={200}
+            className="relative z-20 aspect-video w-full object-cover"
+          />
+          <CardHeader>
+            <CardAction>
+              <Badge variant="secondary">{region} Region</Badge>
+            </CardAction>
+            <CardTitle>{name.common}</CardTitle>
+          </CardHeader>
+          <CardFooter>
+            <Button className="w-full">View Details</Button>
+          </CardFooter>
+        </Card>
     </Link>
   );
 }

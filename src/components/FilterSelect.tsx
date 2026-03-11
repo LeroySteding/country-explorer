@@ -1,34 +1,39 @@
-type Props = {
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+type FilterSelectProps = {
   value: string
   onChange: (value: string) => void
   options: string[]
   label?: string
 }
 
+// Radix staat geen lege string toe als value, gebruik dit als default voor "geen filter"
+const ALL_REGIONS = '__all__'
+
 export default function FilterSelect({
   value,
   onChange,
   options,
-  label = 'Filter by region',
-}: Props) {
+}: FilterSelectProps) {
   return (
-    <label>
-      {/* Visible label paired with the select — correct a11y pattern */}
-      <span>{label}</span>
-
-      <select
-        value={value}
-        onChange={e => onChange(e.target.value)}
-      >
-        {/* Empty string = no filter applied, show everything */}
-        <option value="">All regions</option>
-
+    <Select value={value || ALL_REGIONS} onValueChange={v => onChange(v === ALL_REGIONS ? '' : v)}>
+      <SelectTrigger className="w-48">
+        <SelectValue placeholder="All regions" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value={ALL_REGIONS}>All regions</SelectItem>
         {options.map(option => (
-          <option key={option} value={option}>
+          <SelectItem key={option} value={option}>
             {option}
-          </option>
+          </SelectItem>
         ))}
-      </select>
-    </label>
+      </SelectContent>
+    </Select>
   )
 }
